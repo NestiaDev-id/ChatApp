@@ -40,17 +40,6 @@ export const updateProfile = async (req, res) => {
         message: "Profile picture is required",
       });
     }
-    // Cek apakah gambar yang dikirim merupakan URL gambar yang valid
-    // const isValidUrl =
-    //   /^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i.test(
-    //     profilePic
-    //   );
-    // if (!isValidUrl) {
-    //   return res.status(400).json({
-    //     status: "error",
-    //     message: "Invalid profile picture URL",
-    //   });
-    // }
 
     // Upload gambar ke Cloudinary dengan konfigurasi tambahan
     const uploadResponse = await cloudinary.uploader.upload(profilePic, {

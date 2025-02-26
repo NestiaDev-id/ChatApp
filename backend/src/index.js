@@ -4,6 +4,7 @@ import coockieParser from "cookie-parser";
 import cors from "cors";
 
 import authRoutes from "./routes/authRoute.js";
+import messageRoutes from "./routes/messageRoute.js";
 import { connectDB } from "./lib/db.js";
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(coockieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/message", messageRoutes);
 
 app.listen(PORT, () => {
   console.log("Server is running on PORT:" + PORT);
