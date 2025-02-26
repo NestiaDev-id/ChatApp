@@ -3,10 +3,10 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
 export const signup = async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { username, email, password } = req.body;
 
   try {
-    if (!fullName || !email || !password) {
+    if (!username || !email || !password) {
       return res.status(400).json({
         status: "fail",
         message: "All fields are required",
@@ -34,7 +34,7 @@ export const signup = async (req, res) => {
 
     // Buat user baru
     const newUser = new User({
-      fullName,
+      username,
       email,
       password: hashedPassword,
     });
@@ -46,7 +46,7 @@ export const signup = async (req, res) => {
 
       res.status(201).json({
         _id: newUser._id,
-        fullName: newUser.fullName,
+        username: newUser.username,
         email: newUser.email,
         profilePic: newUser.profilePic,
         token: generateAuthToken(newUser._id, res),
@@ -64,23 +64,80 @@ export const signup = async (req, res) => {
       status: "success",
       message: "User created successfully",
       data: {
-        fullName,
+        username,
         email,
       },
     });
   } catch (error) {
     res.status(500).json({
       status: "error",
-      message: "Something went wrong",
+      message: "Something went wrong while signing up",
       error: error.message,
     });
   }
 };
 
-export const login = (req, res) => {
-  res.send("Login page");
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    if (!email || !password) {
+      return res.status(400).json({
+        status: "fail",
+        message: "All fields are required",
+      });
+    }
+    // Cari user di database
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        status: "fail",
+        message: "User not found",
+      });
+    }
+    // Cek password
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid password",
+      });
+    }
+
+    // Generate jwt token
+    generateAuthToken(user._id, res);
+
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Error while logging in",
+      error: error.message,
+    });
+    console.log("Error can't signup: " + error.message);
+  }
 };
 
 export const logout = (req, res) => {
-  res.send("Logout page");
+  try {
+    // TODO: Logout user (hapus token)
+    res.clearCookie("jwt", "", { maxAge: 0 });
+    res.header("Authorization", "");
+    res.status(200).json({
+      status: "success",
+      message: "User logged out",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Can't log out",
+      error: error.message,
+    });
+    log("Error can't logout: " + error.message);
+  }
 };
