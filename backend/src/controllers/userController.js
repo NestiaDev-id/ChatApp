@@ -100,7 +100,7 @@ export const updateProfile = async (req, res) => {
     }
 
     // Upload gambar ke Cloudinary
-    const uploadResponse = await cloudinary.v2.uploader.upload(profilePic, {
+    const uploadResponse = await cloudinary.uploader.upload(profilePic, {
       folder: "profile_pictures", // Simpan di folder khusus Cloudinary
       transformation: [{ width: 500, height: 500, crop: "fill" }], // Resize ke 500x500
     });
