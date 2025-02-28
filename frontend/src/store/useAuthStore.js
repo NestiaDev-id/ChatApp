@@ -7,64 +7,68 @@ export const useAuthStore = create((set) => ({
   isSignedUp: false,
   isLogginIn: false,
   isUpdatingProfile: false,
+  onlineUsers: [],
 
   isCheckingAuth: true,
 
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
-      // set({ user: res.data.user, isCheckingAuth: false });
+
       set({ authUser: res.data });
-    } catch (e) {
-      console.log("Error in checkAuth: " + e);
+    } catch (error) {
+      console.log("Error in checkAuth:", error);
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
     }
   },
 
-  signUp: async (formData) => {
-    set({ isSignedUp: true });
+  signup: async (data) => {
+    set({ isSigningUp: true });
     try {
-      const res = await axiosInstance.post("/auth/signup", formData);
+      const res = await axiosInstance.post("/auth/signup", data);
       set({ authUser: res.data });
-      toast.success("Sign up success!");
-    } catch (e) {
-      toast.error(e.response.data.message);
+      toast.success("Account created successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
     } finally {
-      set({ isSignedUp: false });
+      set({ isSigningUp: false });
     }
   },
 
-  login: async (formData) => {
-    set({ isLogginIn: true });
+  login: async (data) => {
+    set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/auth/login", formData);
+      const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data });
-      toast.success("Login success!");
-    } catch (e) {
-      toast.error(e.response.data.message);
+      toast.success("Logged in successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
     } finally {
-      set({ isLogginIn: false });
+      set({ isLoggingIn: false });
     }
   },
+
   logout: async () => {
     try {
       await axiosInstance.post("/auth/logout");
       set({ authUser: null });
-      toast.success("Logout success!");
+      toast.success("Logged out successfully");
     } catch (error) {
-      toast.error("Error logging out");
+      toast.error(error.response.data.message);
     }
   },
-  updateProfile: async (formData) => {
+
+  updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
-      const res = await axiosInstance.put("/auth/update-profile", formData);
+      const res = await axiosInstance.put("/auth/update-profile", data);
       set({ authUser: res.data });
-      toast.success("Profile updated!");
-    } catch (e) {
-      toast.error(e.response.data.message);
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      console.log("error in update profile:", error);
+      toast.error(error.response.data.message);
     } finally {
       set({ isUpdatingProfile: false });
     }

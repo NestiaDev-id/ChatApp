@@ -19,6 +19,8 @@ const ProfilePage = () => {
         const base64Image = reader.result;
         setSelectedImg(base64Image);
         await updateProfile({ profilePic: base64Image });
+
+        console.log("Updated authUser:", authUser); // Tambahkan ini untuk debug
       };
     } catch (error) {
       toast.error("Error updating profile picture");
