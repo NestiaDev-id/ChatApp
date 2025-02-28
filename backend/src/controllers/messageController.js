@@ -1,5 +1,6 @@
 import cloudinary from "../lib/cloudinary.js";
 import User from "../models/userModel.js";
+import Message from "../models/messageModel.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -19,6 +20,10 @@ export const getMessage = async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
     const logginUserId = req.user._id;
+
+    console.log("🔍 Debug: Received request to fetch messages");
+    console.log("🆔 Logged-in User ID:", logginUserId);
+    console.log("🆔 User to Chat ID:", userToChatId);
 
     // Ambil pesan antara kedua pengguna
     const messages = await Message.find({

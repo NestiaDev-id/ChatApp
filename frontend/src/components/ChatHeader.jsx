@@ -4,7 +4,7 @@ import { useChatStore } from "../store/useChatStore";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
-  const { onlineUsers } = useAuthStore(); // Pastikan onlineUsers adalah array
+  const { onlineUsers } = useAuthStore();
 
   if (!selectedUser) return null;
 
@@ -17,7 +17,7 @@ const ChatHeader = () => {
             <div className="size-10 rounded-full relative">
               <img
                 src={selectedUser.profilePic || "/avatar.png"}
-                alt={selectedUser.fullName || "User"}
+                alt={selectedUser.username || "User"}
               />
             </div>
           </div>
@@ -25,7 +25,7 @@ const ChatHeader = () => {
           {/* User info */}
           <div>
             <h3 className="font-medium">
-              {selectedUser.fullName || "Unknown User"}
+              {selectedUser.username || "Unknown User"}
             </h3>
             <p className="text-sm text-base-content/70">
               {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
