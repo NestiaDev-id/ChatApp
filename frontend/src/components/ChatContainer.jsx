@@ -8,16 +8,16 @@ function ChatContainer() {
   const { messages, getMessages, isMessageLoading, selectedUser } =
     useChatStore();
 
-  const { authUser } = useChatStore();
-
   useEffect(() => {
-    getMessages(selectedUser._id);
-  }, [selectedUser._id, getMessages]);
+    if (selectedUser?._id) {
+      getMessages(selectedUser._id);
+    }
+  }, [selectedUser?._id, getMessages]);
 
-  console.log("messages", messages);
   console.log("📩 Messages State:", messages);
-  console.log("👤 AuthUser:", authUser);
   console.log("👤 SelectedUser:", selectedUser);
+
+  const loggedInUserId = localStorage.getItem("userId");
 
   if (isMessageLoading)
     return (
@@ -36,27 +36,27 @@ function ChatContainer() {
           <div
             key={message._id}
             className={`chat ${
-              message.senderId === authUser._id ? "chat-end" : "chat-start"
+              message.senderId === loggedInUserId ? "chat-end" : "chat-start"
             }`}
           >
-            <div className=" chat-image avatar">
+            <div className="chat-image avatar">
               <div className="size-10 rounded-full border">
                 <img
                   src={
-                    message.senderId === authUser._id
-                      ? authUser.profilePic || "/avatar.png"
-                      : selectedUser.profilePic || "/avatar.png"
+                    message.senderId === loggedInUserId
+                      ? "/avatar.png" // Atau URL avatar pengguna saat ini
+                      : selectedUser?.profilePic || "/avatar.png"
                   }
                   alt="profile pic"
                 />
               </div>
             </div>
-            {/* <div className="chat-header mb-1">
+            <div className="chat-header mb-1">
               <time className="text-xs opacity-50 ml-1">
                 {message.createdAt}
               </time>
-            </div> */}
-            {/* <div className="chat-bubble flex flex-col">
+            </div>
+            <div className="chat-bubble flex flex-col">
               {message.image && (
                 <img
                   src={message.image}
@@ -65,7 +65,7 @@ function ChatContainer() {
                 />
               )}
               {message.text && <p>{message.text}</p>}
-            </div> */}
+            </div>
           </div>
         ))}
       </div>
