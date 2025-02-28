@@ -3,29 +3,24 @@ import User from "../models/userModel.js";
 
 export const getUsers = async (req, res) => {
   try {
-    const logginUserId = req.user._id;
+    const loggedInUserId = req.user._id;
     const filteredUsers = await User.find({
-      _id: { $ne: logginUserId },
+      _id: { $ne: loggedInUserId },
     }).select("-password");
 
-    res.status(200).json({
-      status: "success",
-      message: "Users fetched successfully",
-      data: filteredUsers,
-    });
+    res.status(200).json(filteredUsers);
   } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: "Something went wrong while fetching users",
-      error: error.message,
-    });
+    console.error("Error in getUsersForSidebar: ", error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
 export const getMessage = async (req, res) => {
   try {
-    const logginUserId = req.user._id;
     const { id: userToChatId } = req.params;
+    const logginUserId = req.user._id;
+
+    // Ambil pesan antara kedua pengguna
     const messages = await Message.find({
       $or: [
         { senderId: logginUserId, receiverId: userToChatId },
@@ -33,12 +28,14 @@ export const getMessage = async (req, res) => {
       ],
     });
 
+    // Jika ada pesan, kirimkan respons
     res.status(200).json({
       status: "success",
       message: "Messages fetched successfully",
       data: messages,
     });
   } catch (error) {
+    console.error("Get Message Error:", error.message);
     res.status(500).json({
       status: "error",
       message: "Something went wrong while fetching messages",
