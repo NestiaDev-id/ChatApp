@@ -7,18 +7,35 @@ import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime, getFormattedDate } from "../lib/utils";
 
 function ChatContainer() {
-  const { messages, getMessages, isMessageLoading, selectedUser } =
-    useChatStore();
+  const {
+    messages,
+    getMessages,
+    isMessageLoading,
+    selectedUser,
+    subScribeToMessages,
+    unSubScribeFromMessages,
+  } = useChatStore();
   const { authUser } = useAuthStore();
 
   useEffect(() => {
     if (selectedUser?._id) {
       getMessages(selectedUser._id);
-    }
-  }, [selectedUser?._id, getMessages]);
 
-  console.log("📩 Messages State:", messages);
-  console.log("👤 SelectedUser:", selectedUser);
+      subScribeToMessages();
+
+      return () => {
+        unSubScribeFromMessages();
+      };
+    }
+  }, [
+    selectedUser?._id,
+    getMessages,
+    subScribeToMessages,
+    unSubScribeFromMessages,
+  ]);
+
+  // console.log("📩 Messages State:", messages);
+  // console.log("👤 SelectedUser:", selectedUser);
 
   if (isMessageLoading)
     return (
