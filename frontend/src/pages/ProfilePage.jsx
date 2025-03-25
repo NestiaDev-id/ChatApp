@@ -10,6 +10,16 @@ const ProfilePage = () => {
     console.log("authUser:", authUser);
   }
 
+  const getProfilePic = () => {
+    if (authUser?.profilePic) {
+      return authUser.profilePic;
+    } else if (selectedImg) {
+      return selectedImg;
+    } else {
+      return "/avatar.png"; // Gambar default jika tidak ada gambar yang dipilih
+    }
+  };
+
   const handleImageUpload = async (e) => {
     try {
       const file = e.target.files[0];
@@ -27,6 +37,7 @@ const ProfilePage = () => {
         console.log("Updated authUser:", authUser); // Tambahkan ini untuk debug
       };
     } catch (error) {
+      console.error("Error updating profile picture:", error);
       toast.error("Error updating profile picture");
     }
   };
@@ -45,7 +56,7 @@ const ProfilePage = () => {
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img
-                src={selectedImg || authUser.data.profilePic || "/avatar.png"}
+                src={getProfilePic()}
                 alt="Profile"
                 className="size-32 rounded-full object-cover border-4 "
               />
@@ -86,7 +97,7 @@ const ProfilePage = () => {
                 Username
               </div>
               <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
-                {authUser?.data.username}
+                {authUser?.username}
               </p>
             </div>
 
@@ -96,7 +107,7 @@ const ProfilePage = () => {
                 Email Address
               </div>
               <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
-                {authUser?.data.email}
+                {authUser?.email}
               </p>
             </div>
           </div>
@@ -106,7 +117,7 @@ const ProfilePage = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between py-2 border-b border-zinc-700">
                 <span>Member Since</span>
-                <span>{authUser.data.createdAt?.split("T")[0]}</span>
+                <span>{authUser.createdAt?.split("T")[0]}</span>
               </div>
               <div className="flex items-center justify-between py-2">
                 <span>Account Status</span>

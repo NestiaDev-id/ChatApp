@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-import { Users } from "lucide-react";
+import { Users, MessageSquarePlus } from "lucide-react";
 
 function Sidebar() {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
@@ -23,27 +23,37 @@ function Sidebar() {
   }
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
-      <div className="border-b border-base-300 w-full p-5">
+      <div className="border-b border-base-300 w-full p-5 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Users className="size-6" />
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
-        {/* Todo online filter toogle */}
-        <div className="mt-3 hidden lg:flex items-center gap-2">
-          <label className="cursor-pointer flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={showOnlineOnly}
-              onChange={(e) => setShowOnlineOnly(e.target.checked)}
-              className="checkbox checkbox-sm"
-            />
-            <span className="text-sm">Show online only</span>
-          </label>
-          <span className="text-xs text-zinc-500">
-            ({onlineUsers.length - 1} online)
-          </span>
-        </div>
+        {/* Button Group Chat */}
+        <button
+          className="p-2 rounded-full hover:bg-base-300 transition-all"
+          onClick={() => alert("Open Group Chat Modal")}
+        >
+          <MessageSquarePlus className="size-6" />
+        </button>
       </div>
+
+      {/* Online filter toggle */}
+      <div className="mt-3 hidden lg:flex items-center gap-2 px-5">
+        <label className="cursor-pointer flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={showOnlineOnly}
+            onChange={(e) => setShowOnlineOnly(e.target.checked)}
+            className="checkbox checkbox-sm"
+          />
+          <span className="text-sm">Show online only</span>
+        </label>
+        <span className="text-xs text-zinc-500">
+          ({onlineUsers.length - 1} online)
+        </span>
+      </div>
+
+      {/* User list */}
       <div className="overflow-y-auto w-full py-3">
         {filteredUsers.map((user) => {
           return (

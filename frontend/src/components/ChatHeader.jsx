@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { Edit3, X } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 
@@ -33,10 +33,22 @@ const ChatHeader = () => {
           </div>
         </div>
 
-        {/* Close button */}
-        <button onClick={() => setSelectedUser(null)}>
-          <X />
-        </button>
+        {/* Right Section: Actions */}
+        <div className="flex gap-2">
+          {/* Edit Button */}
+          <button
+            className="flex items-center gap-1 px-3 py-1.5"
+            onClick={() => alert("Edit Profile")}
+          >
+            <Edit3 className="w-4 h-4" />
+            <span className="hidden sm:inline">Edit</span>
+          </button>
+
+          {/* Close Button */}
+          <button className="p-2" onClick={() => setSelectedUser(null)}>
+            <X className="w-5 h-5 text-red-400" />
+          </button>
+        </div>
       </div>
     </div>
   );
