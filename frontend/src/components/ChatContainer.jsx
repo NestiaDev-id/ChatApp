@@ -12,8 +12,8 @@ function ChatContainer() {
     getMessages,
     isMessageLoading,
     selectedUser,
-    subScribeToMessages,
-    unSubScribeFromMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
   } = useChatStore();
   const { authUser } = useAuthStore();
   const messagesEndRef = useRef(null);
@@ -22,17 +22,17 @@ function ChatContainer() {
     if (selectedUser?._id) {
       getMessages(selectedUser._id);
 
-      subScribeToMessages();
+      subscribeToMessages();
 
       return () => {
-        unSubScribeFromMessages();
+        unsubscribeFromMessages();
       };
     }
   }, [
     selectedUser?._id,
     getMessages,
-    subScribeToMessages,
-    unSubScribeFromMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
   ]);
 
   // console.log("📩 Messages State:", messages);
