@@ -8,49 +8,49 @@ const seedUsers = [
   // Female Users
   {
     email: "emma.thompson@example.com",
-    fullName: "Emma Thompson",
+    username: "Emma Thompson",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/women/1.jpg",
   },
   {
     email: "olivia.miller@example.com",
-    fullName: "Olivia Miller",
+    username: "Olivia Miller",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/women/2.jpg",
   },
   {
     email: "sophia.davis@example.com",
-    fullName: "Sophia Davis",
+    username: "Sophia Davis",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/women/3.jpg",
   },
   {
     email: "ava.wilson@example.com",
-    fullName: "Ava Wilson",
+    username: "Ava Wilson",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/women/4.jpg",
   },
   {
     email: "isabella.brown@example.com",
-    fullName: "Isabella Brown",
+    username: "Isabella Brown",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/women/5.jpg",
   },
   {
     email: "mia.johnson@example.com",
-    fullName: "Mia Johnson",
+    username: "Mia Johnson",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/women/6.jpg",
   },
   {
     email: "charlotte.williams@example.com",
-    fullName: "Charlotte Williams",
+    username: "Charlotte Williams",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/women/7.jpg",
   },
   {
     email: "amelia.garcia@example.com",
-    fullName: "Amelia Garcia",
+    username: "Amelia Garcia",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/women/8.jpg",
   },
@@ -58,53 +58,82 @@ const seedUsers = [
   // Male Users
   {
     email: "james.anderson@example.com",
-    fullName: "James Anderson",
+    username: "James Anderson",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/1.jpg",
   },
   {
     email: "william.clark@example.com",
-    fullName: "William Clark",
+    username: "William Clark",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/2.jpg",
   },
   {
     email: "benjamin.taylor@example.com",
-    fullName: "Benjamin Taylor",
+    username: "Benjamin Taylor",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/3.jpg",
   },
   {
     email: "lucas.moore@example.com",
-    fullName: "Lucas Moore",
+    username: "Lucas Moore",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/4.jpg",
   },
   {
     email: "henry.jackson@example.com",
-    fullName: "Henry Jackson",
+    username: "Henry Jackson",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/5.jpg",
   },
   {
     email: "alexander.martin@example.com",
-    fullName: "Alexander Martin",
+    username: "Alexander Martin",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/6.jpg",
   },
   {
     email: "daniel.rodriguez@example.com",
-    fullName: "Daniel Rodriguez",
+    username: "Daniel Rodriguez",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/7.jpg",
   },
-];
 
+  // Admin User
+  {
+    email: "test@gmail.com",
+    username: "test",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/men/8.jpg",
+  },
+  {
+    email: "test1@gmail.com",
+    username: "test1",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/men/8.jpg",
+  },
+  {
+    email: "test2@gmail.com",
+    username: "test2",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/men/8.jpg",
+  },
+];
 const seedDatabase = async () => {
   try {
     await connectDB();
+    await User.deleteMany(); // Menghapus semua user sebelum menambahkan baru
+    console.log("Users deleted");
 
-    await User.insertMany(seedUsers);
+    const saltRounds = 10;
+    const hashedUsers = await Promise.all(
+      seedUsers.map(async (user) => {
+        const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+        return { ...user, password: hashedPassword };
+      })
+    );
+
+    await User.insertMany(hashedUsers);
     console.log("Database seeded successfully");
   } catch (error) {
     console.error("Error seeding database:", error);
