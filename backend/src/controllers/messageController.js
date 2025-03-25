@@ -21,9 +21,9 @@ export const getMessage = async (req, res) => {
     const { id: userToChatId } = req.params;
     const logginUserId = req.user._id;
 
-    console.log("🔍 Debug: Received request to fetch messages");
-    console.log("🆔 Logged-in User ID:", logginUserId);
-    console.log("🆔 User to Chat ID:", userToChatId);
+    // console.log("🔍 Debug: Received request to fetch messages");
+    // console.log("🆔 Logged-in User ID:", logginUserId);
+    // console.log("🆔 User to Chat ID:", userToChatId);
 
     // Ambil pesan antara kedua pengguna
     const messages = await Message.find({
